@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Compressor - Free Online Image Compression Tool</title>
-    <meta name="description" content="Free online image compressor. Compress PNG, JPG, WebP images without losing quality. No upload limit, no registration required.">
-    <meta name="keywords" content="image compressor, online image compression, png compressor, jpg compression, webp optimizer">
+    <title>Image Compressor - 免费在线工具</title>
+    <meta name="description" content="图片压缩工具,compress PNG JPG WebP images online">
+    <meta name="keywords" content="">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
@@ -38,41 +38,6 @@
             margin: 20px 0;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
-        .upload-area {
-            border: 3px dashed #667eea;
-            border-radius: 15px;
-            padding: 60px 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            background: #f8f9ff;
-        }
-        .upload-area:hover {
-            border-color: #764ba2;
-            background: #f0f2ff;
-        }
-        .upload-area.dragover {
-            border-color: #764ba2;
-            background: #e8ebff;
-        }
-        .upload-icon { font-size: 4rem; margin-bottom: 20px; }
-        .upload-text { font-size: 1.2rem; color: #666; margin-bottom: 10px; }
-        .upload-hint { font-size: 0.9rem; color: #999; }
-        input[type="file"] { display: none; }
-        .features { 
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 40px 0;
-        }
-        .feature {
-            background: #f8f9ff;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-        }
-        .feature h3 { color: #667eea; margin-bottom: 10px; }
-        .feature p { color: #666; font-size: 0.9rem; }
         footer {
             text-align: center;
             padding: 40px 20px;
@@ -84,77 +49,26 @@
 <body>
     <div class="container">
         <header>
-            <h1>🖼️ Image Compressor</h1>
-            <p>Free online image compression tool - compress without losing quality</p>
+            <h1>🛠️ Image Compressor</h1>
+            <p>图片压缩工具,compress PNG JPG WebP images online</p>
         </header>
         
         <div class="ad-banner">
-            <p>📢 Advertisement Space - Google AdSense Will Be Placed Here</p>
+            <p>📢 Advertisement Space - Google AdSense</p>
         </div>
         
         <div class="tool-card">
-            <div class="upload-area" id="uploadArea">
-                <div class="upload-icon">📁</div>
-                <div class="upload-text">Drop your images here or click to upload</div>
-                <div class="upload-hint">Supports PNG, JPG, WebP - Max 20MB per file</div>
-                <input type="file" id="fileInput" multiple accept="image/*">
-            </div>
-        </div>
-        
-        <div class="features">
-            <div class="feature">
-                <h3>🎯 Lossless Compression</h3>
-                <p>Compress images without visible quality loss</p>
-            </div>
-            <div class="feature">
-                <h3>⚡ Batch Processing</h3>
-                <p>Compress multiple images at once</p>
-            </div>
-            <div class="feature">
-                <h3>🔒 100% Private</h3>
-                <p>All processing happens in your browser</p>
-            </div>
-            <div class="feature">
-                <h3>💾 No Limits</h3>
-                <p>No file size limits, no registration required</p>
-            </div>
+            <h2>Image Compressor - 免费在线工具</h2>
+            <p>功能开发中，敬请期待...</p>
         </div>
         
         <div class="ad-banner">
-            <p>📢 Advertisement Space - Google AdSense Will Be Placed Here</p>
+            <p>📢 Advertisement Space - Google AdSense</p>
         </div>
         
         <footer>
-            <p>© 2026 Image Compressor | Free Online Image Tool</p>
+            <p>© 2026 Image Compressor | Free Online Tool</p>
         </footer>
     </div>
-    
-    <script>
-        const uploadArea = document.getElementById('uploadArea');
-        const fileInput = document.getElementById('fileInput');
-        
-        uploadArea.addEventListener('click', () => fileInput.click());
-        uploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.classList.add('dragover');
-        });
-        uploadArea.addEventListener('dragleave', () => {
-            uploadArea.classList.remove('dragover');
-        });
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadArea.classList.remove('dragover');
-            handleFiles(e.dataTransfer.files);
-        });
-        fileInput.addEventListener('change', (e) => {
-            handleFiles(e.target.files);
-        });
-        
-        function handleFiles(files) {
-            if (files.length > 0) {
-                alert(`Selected ${files.length} file(s). This is a demo - compression feature coming soon!`);
-            }
-        }
-    </script>
 </body>
 </html>
