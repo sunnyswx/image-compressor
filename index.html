@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Compressor - 免费在线工具</title>
-    <meta name="description" content="图片压缩工具,compress PNG JPG WebP images online">
-    <meta name="keywords" content="">
+    <title>Image Compressor - 免费在线图片压缩工具</title>
+    <meta name="description" content="免费在线图片压缩工具，支持PNG、JPG、WebP格式压缩，无需上传服务器，本地处理保护隐私">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
@@ -22,6 +21,7 @@
         }
         header h1 { font-size: 2.5rem; margin-bottom: 10px; }
         header p { font-size: 1.2rem; opacity: 0.9; }
+        
         .ad-banner { 
             background: rgba(255,255,255,0.1);
             border: 2px dashed rgba(255,255,255,0.3);
@@ -31,6 +31,7 @@
             color: white;
             border-radius: 10px;
         }
+        
         .tool-card { 
             background: white;
             border-radius: 20px;
@@ -38,6 +39,101 @@
             margin: 20px 0;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
+        
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 60px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #f8f9fa;
+        }
+        .upload-area:hover {
+            border-color: #764ba2;
+            background: #f0f0f0;
+        }
+        .upload-area.dragover {
+            border-color: #764ba2;
+            background: #e8e8ff;
+        }
+        .upload-icon { font-size: 4rem; margin-bottom: 20px; }
+        .upload-text { font-size: 1.2rem; color: #666; }
+        
+        #fileInput { display: none; }
+        
+        .controls {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        .controls label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #333;
+        }
+        .controls input[type="range"] {
+            width: 100%;
+            margin: 10px 0;
+        }
+        .quality-value {
+            display: inline-block;
+            padding: 5px 15px;
+            background: #667eea;
+            color: white;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin: 10px;
+        }
+        .btn:hover { transform: scale(1.05); }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background: #e8f5e9;
+            border-radius: 10px;
+            display: none;
+        }
+        .result.show { display: block; }
+        .result h3 { color: #2e7d32; margin-bottom: 15px; }
+        .stats {
+            display: flex;
+            gap: 30px;
+            margin: 15px 0;
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        .stat-save {
+            color: #4caf50;
+        }
+        
         footer {
             text-align: center;
             padding: 40px 20px;
@@ -49,26 +145,167 @@
 <body>
     <div class="container">
         <header>
-            <h1>🛠️ Image Compressor</h1>
-            <p>图片压缩工具,compress PNG JPG WebP images online</p>
+            <h1>🛠️ 图片压缩工具</h1>
+            <p>免费在线压缩PNG、JPG、WebP图片，无需上传服务器，本地处理保护隐私</p>
         </header>
         
         <div class="ad-banner">
-            <p>📢 Advertisement Space - Google AdSense</p>
+            <p>📢 广告位 - Google AdSense</p>
         </div>
         
         <div class="tool-card">
-            <h2>Image Compressor - 免费在线工具</h2>
-            <p>功能开发中，敬请期待...</p>
+            <h2>上传图片并压缩</h2>
+            
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📁</div>
+                <div class="upload-text">点击上传或拖拽图片到此处</div>
+                <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp">
+            </div>
+            
+            <div class="controls" id="controls" style="display: none;">
+                <label>
+                    压缩质量：<span class="quality-value" id="qualityValue">80%</span>
+                    <input type="range" id="qualitySlider" min="1" max="100" value="80">
+                </label>
+                <button class="btn" id="compressBtn">开始压缩</button>
+            </div>
+            
+            <div class="result" id="result">
+                <h3>✅ 压缩完成！</h3>
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="originalSize">-</div>
+                        <div class="stat-label">原始大小</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="compressedSize">-</div>
+                        <div class="stat-label">压缩后大小</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value stat-save" id="savePercent">-</div>
+                        <div class="stat-label">节省空间</div>
+                    </div>
+                </div>
+                <a id="downloadLink" class="btn" download="compressed-image.jpg">下载压缩图片</a>
+            </div>
         </div>
         
         <div class="ad-banner">
-            <p>📢 Advertisement Space - Google AdSense</p>
+            <p>📢 广告位 - Google AdSense</p>
         </div>
         
         <footer>
-            <p>© 2026 Image Compressor | Free Online Tool</p>
+            <p>© 2026 Image Compressor | 免费在线工具</p>
         </footer>
     </div>
+    
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const controls = document.getElementById('controls');
+        const qualitySlider = document.getElementById('qualitySlider');
+        const qualityValue = document.getElementById('qualityValue');
+        const compressBtn = document.getElementById('compressBtn');
+        const result = document.getElementById('result');
+        
+        let currentFile = null;
+        
+        // 点击上传
+        uploadArea.addEventListener('click', () => fileInput.click());
+        
+        // 文件选择
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files[0]) {
+                currentFile = e.target.files[0];
+                controls.style.display = 'block';
+                result.classList.remove('show');
+            }
+        });
+        
+        // 拖拽上传
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                currentFile = file;
+                fileInput.files = e.dataTransfer.files;
+                controls.style.display = 'block';
+                result.classList.remove('show');
+            }
+        });
+        
+        // 质量滑块
+        qualitySlider.addEventListener('input', (e) => {
+            qualityValue.textContent = e.target.value + '%';
+        });
+        
+        // 压缩图片
+        compressBtn.addEventListener('click', async () => {
+            if (!currentFile) return;
+            
+            compressBtn.disabled = true;
+            compressBtn.textContent = '压缩中...';
+            
+            try {
+                const quality = parseInt(qualitySlider.value) / 100;
+                const img = new Image();
+                img.src = URL.createObjectURL(currentFile);
+                
+                await new Promise((resolve) => {
+                    img.onload = resolve;
+                });
+                
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                
+                canvas.toBlob((blob) => {
+                    const compressedUrl = URL.createObjectURL(blob);
+                    const compressedSize = blob.size;
+                    const originalSize = currentFile.size;
+                    const savePercent = ((originalSize - compressedSize) / originalSize * 100).toFixed(1);
+                    
+                    document.getElementById('originalSize').textContent = formatBytes(originalSize);
+                    document.getElementById('compressedSize').textContent = formatBytes(compressedSize);
+                    document.getElementById('savePercent').textContent = savePercent + '%';
+                    
+                    const downloadLink = document.getElementById('downloadLink');
+                    downloadLink.href = compressedUrl;
+                    downloadLink.download = 'compressed-image.jpg';
+                    
+                    result.classList.add('show');
+                    compressBtn.disabled = false;
+                    compressBtn.textContent = '开始压缩';
+                }, 'image/jpeg', quality);
+                
+            } catch (error) {
+                console.error('压缩失败:', error);
+                alert('压缩失败，请重试');
+                compressBtn.disabled = false;
+                compressBtn.textContent = '开始压缩';
+            }
+        });
+        
+        function formatBytes(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+    </script>
 </body>
 </html>
